@@ -1,10 +1,6 @@
-let baseUrl = '//localhost:8081/wcdog';
-let baseImgPath = '/img/';
+let baseUrl = "//localhost:8080/";
+let baseImgPath = "/img/";
 
-const USER_INFO_KEY = 'user_info';
+const USER_INFO_KEY = "user_info";
 
-export {
-    baseUrl,
-    baseImgPath,
-    USER_INFO_KEY
-}
+export { baseUrl, baseImgPath, USER_INFO_KEY };

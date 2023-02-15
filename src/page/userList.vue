@@ -6,10 +6,7 @@
                 <el-form-item label="关键字" prop="title">
                     <el-input v-model="keyWords" placeholder="请输入关键字" style='width: 600px' clearable>
                         <el-select v-model="ruleForm.keySelect" slot="prepend" placeholder="ruleForm.keySelect" style="width: 130px;">
-                            <el-option label="全部" value="0"></el-option>
-                            <el-option label="用户ID" value="1"></el-option>
-                            <el-option label="用户名" value="2"></el-option>
-                            <el-option label="用户昵称" value="3"></el-option>
+                            <el-option label="用户昵称" value="0"></el-option>
                         </el-select>
                     </el-input>
                 </el-form-item>
@@ -112,15 +109,15 @@ export default {
         },
 
         getUsers() {
-            this.$axios.get(`/admin/userlist`, {
+            this.$axios.get(`/admin/userList`, {
                     params: {
                         page: this.page,
                         row: this.row
                     }
                 })
                 .then((response) => {
-                    const users = response.data;
-                    const data = users.data;
+                    const users = response.data.data;
+                    const data = users.records;
                     this.count = users.total;
                     this.tableData = [];
                     data.forEach(item => {
@@ -142,15 +139,16 @@ export default {
         },
         deleteUser(index, userId) {
             this.dialogVisible = false
-            this.$axios.post(`/admin/user/delete`, {
+            this.$axios.delete(`admin/delete/user`,{
+                params: {
                     userId: userId,
-                    adminId: this.adminId
+                    }     
                 })
                 .then((response) => {
-                    const result = response.data;
-                    if (result && result.code === 200) {
+                    const result = response.data;   
+                    if (result && result.code === '200') {
                         this.openSuccess('恭喜，删除成功!');
-                        this.tableData.splice(index, 1);
+                        this.getUsers();
                     } else if (result.msg) {
                         this.$message.error(result.msg);
                     }
@@ -164,20 +162,18 @@ export default {
                 page: this.page,
                 row: this.row,
             };
-            if (this.ruleForm.keySelect === "1") {
-                params.userId = encodeURI(this.keyWords);
-            } else if (this.ruleForm.keySelect === "2") {
-                params.name = encodeURI(this.keyWords);
-            } else if (this.ruleForm.keySelect === "3") {
-                params.nickname = encodeURI(this.keyWords);
+            if (this.ruleForm.keySelect === "0") {
+                params.search = encodeURI(this.keyWords);
+                params.page = this.page,
+                params.row = this.row
             }
 
-            this.$axios.get(`/admin/userlist/search`, {
+            this.$axios.get(`/admin/userList`, {
                     params
                 })
                 .then((response) => {
-                    const users = response.data;
-                    const data = users.data;
+                    const users = response.data.data;
+                    const data = users.records;
                     this.count = users.total;
                     this.tableData = [];
                     data.forEach(item => {

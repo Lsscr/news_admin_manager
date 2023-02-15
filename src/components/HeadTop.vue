@@ -34,7 +34,7 @@ export default {
     data() {
         return {
             info: {
-                nickname: '未登录'
+                nickname: 'Admin'
             },
             dialogVisible: false,
         }

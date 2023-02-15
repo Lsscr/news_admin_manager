@@ -52,7 +52,7 @@ export default {
             this.page = val;
         },
         getJokeComments() {
-            this.$axios.get(`/joke/comment/list`, {
+            this.$axios.get(`/admin/commentList`, {
                     params: {
                         page: this.page,
                         row: this.row,

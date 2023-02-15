@@ -7,8 +7,6 @@
                     <el-input v-model="keyWords" placeholder="请输入关键字" style='width: 600px' clearable>
                         <el-select v-model="ruleForm.keySelect" slot="prepend" placeholder="ruleForm.keySelect" style="width: 130px;">
                             <el-option label="标题名称" value="1"></el-option>
-                            <el-option label="文章ID" value="2"></el-option>
-                            <el-option label="作者ID" value="3"></el-option>
                         </el-select>
                     </el-input>
                 </el-form-item>
@@ -85,7 +83,7 @@
                 <el-image style="width: 90%; height: auto; margin-top:10px;" class="avatar" v-if="selectTable.coverImg" :src="selectTable.coverImg"></el-image>
             </el-dialog>
             <el-dialog title="提示" :visible.sync="dialogVisible" width="25%">
-                <span>确定删除《{{selectTable.title}}》这个段子吗？</span>
+                <span>确定删除《{{selectTable.title}}》这个文章吗？</span>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="deleteJoke(selectIndex,selectTable.jokeId)">确 定</el-button>
@@ -182,16 +180,16 @@ export default {
             this.getJokes()
         },
         getJokes() {
-            this.$axios.get(`/joke/jokelist`, {
+            this.$axios.get(`admin/articleList`, {
                     params: {
                         page: this.page,
                         row: this.row
                     }
                 })
                 .then((response) => {
-                    const joker = response.data;
-                    const data = joker.data;
-                    this.count = joker.total;
+                    const article = response.data.data;
+                    const data = article.records;
+                    this.count = article.total;
                     this.tableData = [];
                     data.forEach(item => {
                         const tableData = {};
@@ -241,15 +239,18 @@ export default {
         },
         deleteJoke(index, jokeId) {
             this.dialogVisible = false
-            this.$axios.post(`/admin/joke/delete`, {
+            this.$axios.delete(`/admin/delete/article`, {
+                params: {
                     jokeId: jokeId,
                     adminId: this.adminId
+                    }   
                 })
                 .then((response) => {
-                    const result = response.data;
-                    if (result && result.code === 200) {
+                    const article = response.data.data;
+                    const result = article.records;
+                    if (result && result.code === '200') {
                         this.openSuccess('恭喜，删除成功!');
-                        this.tableData.splice(index, 1);
+                        this.getJokes();
                     }
                 })
                 .catch((error) => {
@@ -274,19 +275,16 @@ export default {
                 tags: encodeURI(this.ruleForm.selectTag)
             };
             if (this.ruleForm.keySelect === "1") {
-                params.key = encodeURI(this.keyWords);
-            } else if (this.ruleForm.keySelect === "2") {
-                params.jokeId = encodeURI(this.keyWords);
-            } else if (this.ruleForm.keySelect === "3") {
-                params.jokeUserId = encodeURI(this.keyWords);
+                params.search = this.keyWords;
             }
-            this.$axios.get(`/joke/jokelist/search`, {
+            this.$axios.get(`admin/articleList`, {
                     params
                 })
                 .then((response) => {
-                    const joker = response.data;
-                    if (joker.code === 200) {
-                        const data = joker.data;
+                    let joker = response.data;
+                    if (joker.code === '200') {
+                        joker = joker.data;
+                        const data = joker.records;
                         this.count = joker.total;
                         this.tableData = [];
                         data.forEach(item => {

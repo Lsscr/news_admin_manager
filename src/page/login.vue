@@ -2,7 +2,7 @@
     <div class="fillcontain login-bg">
         <div class="logo-root">
             <img class="dog-logo" src="@/assets/dog.jpg" alt="">
-            <div><span style="font-size: 15px;">WCDOG</span></div>
+            <div><span style="font-size: 15px;">MyAdmin</span></div>
             <div><span style="font-weight: bold;color: #666;font-size: 18px;" >管理系统</span></div>
         </div>
         <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
@@ -77,13 +77,14 @@ export default {
         },
 
         login() {
-            this.$axios.post(`/admin/login`, {
+            this.$axios.post(`/admin/login`,null,
+                {params:{
                     name: this.ruleForm.pass,
-                    psw: this.ruleForm.checkPass
-                })
+                    password: this.ruleForm.checkPass
+                }})
                 .then((response) => {
                     const user = response.data;
-                    if (user.code === 200) {
+                    if (user.code === '200') {
                         this.$router.push('manager');
                         setStore(USER_INFO_KEY, user.data[0]);
                         this.$store.commit("initUserInfo", user.data[0].adminId);

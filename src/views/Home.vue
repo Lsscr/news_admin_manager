@@ -10,8 +10,8 @@
                 <el-submenu index="2">
                     <template slot="title"><i class="el-icon-menu"></i>段子管理</template>
                     <el-menu-item-group>
-                        <el-menu-item index="jokeList">段子列表</el-menu-item>
-                        <el-menu-item index="jokeAdd">新增段子</el-menu-item>
+                        <el-menu-item index="articleList">文章列表</el-menu-item>
+                        <el-menu-item index="articleAdd">文章评论添加</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
                 <el-submenu index="3">
