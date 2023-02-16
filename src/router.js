@@ -3,8 +3,8 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import userList from './page/userList.vue'
 import manager from './page/manager.vue'
-import jokeList from './page/jokeList.vue'
-import jokeAdd from './page/jokeAdd.vue'
+import articleList from './page/articleList.vue'
+import articleAdd from './page/articleAdd.vue'
 import banner from './page/banner.vue'
 import imgList from './page/imgList.vue'
 import login from './page/login.vue'
@@ -37,14 +37,14 @@ export default new Router({
                 component: userList,
                 meta: ['用户管理', '用户列表'],
             }, {
-                path: '/jokeList',
-                name: 'jokeList',
-                component: jokeList,
+                path: '/articleList',
+                name: 'articleList',
+                component: articleList,
                 meta: ['段子管理', '段子列表'],
             }, {
-                path: '/jokeAdd',
-                name: 'jokeAdd',
-                component: jokeAdd,
+                path: '/articleAdd',
+                name: 'articleAdd',
+                component: articleAdd,
                 meta: ['段子管理', '新增段子'],
             }, {
                 path: '/plank',
