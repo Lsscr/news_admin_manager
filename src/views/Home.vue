@@ -50,7 +50,6 @@
   </el-container>
 </template>
 <script>
-import "core-js/modules/es6.array.fill";
 export default {
   data() {
     const item = {
