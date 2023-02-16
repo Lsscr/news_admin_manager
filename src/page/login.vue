@@ -3,20 +3,21 @@
         <div class="logo-root">
             <img class="dog-logo" src="@/assets/dog.jpg" alt="">
             <div><span style="font-size: 15px;">MyAdmin</span></div>
-            <div><span style="font-weight: bold;color: #666;font-size: 18px;" >管理系统</span></div>
+            <div><span style="font-weight: bold;color: #666;font-size: 18px;">管理系统</span></div>
         </div>
         <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
             <el-form-item label="用户名" prop="pass">
                 <el-input v-model="ruleForm.pass" autocomplete="off" placeholder='用户名'></el-input>
             </el-form-item>
             <el-form-item label="密　码" prop="checkPass">
-                <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" placeholder='密码' show-password></el-input>
+                <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" placeholder='密码'
+                    show-password></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button class='btn' type="primary" @click="submitForm('ruleForm')">提交</el-button>
             </el-form-item>
         </el-form>
-    </div>
+</div>
 </template>
 <script>
 import { setStore } from '@/utils/utils.js'
@@ -77,11 +78,13 @@ export default {
         },
 
         login() {
-            this.$axios.post(`/admin/login`,null,
-                {params:{
-                    name: this.ruleForm.pass,
-                    password: this.ruleForm.checkPass
-                }})
+            this.$axios.post(`/logins`, null,
+                {
+                    params: {
+                        name: this.ruleForm.pass,
+                        password: this.ruleForm.checkPass
+                    }
+                })
                 .then((response) => {
                     const user = response.data;
                     if (user.code === '200') {
@@ -136,5 +139,4 @@ export default {
 .dog-logo {
     width: 100px;
     height: 100px;
-}
-</style>
+}</style>
