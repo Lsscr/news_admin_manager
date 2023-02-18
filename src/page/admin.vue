@@ -44,7 +44,6 @@ export default {
                 return;
             }
             this.info = data;
-            console.log(this.info);
         },
     }
 }

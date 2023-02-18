@@ -72,7 +72,7 @@ export default {
       return {
           tableData: Array(0).fill(item),
           page: 1,
-          row: 10,
+          row: 5,
           count: 0,
           currentPage: 1,
           dialogVisible: false,
@@ -102,7 +102,6 @@ export default {
           console.log(`每页 ${val} 条`);
       },
       handleCurrentChange(val) {
-          console.log(val);
           this.currentPage = val;
           this.page = val;
           this.getUsers()
@@ -111,8 +110,8 @@ export default {
       getUsers() {
           this.$axios.get(`/admin/userList`, {
                   params: {
-                      page: this.page,
-                      row: this.row
+                      pageNum: this.page,
+                      pageSize: this.row
                   }
               })
               .then((response) => {

@@ -7,12 +7,6 @@
                 <el-form-item label="文章标题" prop="title">
                     <el-input v-model="ruleForm.title" placeholder="请输入标题" style='width: 500px' clearable></el-input>
                 </el-form-item>
-                <el-form-item label="文章种类">
-                    <el-select v-model="ruleForm.type" placeholder="ruleForm.type">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="上传首页图片">
                     <el-input placeholder="请在这里粘贴图片地址" v-model="ruleForm.coverImg" style='width: 500px;margin-bottom: 10px'>
                     </el-input>
@@ -22,18 +16,18 @@
                         </el-image>
                     </div>
                     <!--   <el-upload class="avatar-uploader" :action="baseUrl + '/v1/addimg/shop'" :show-file-list="false" :on-success="handleShopAvatarScucess" :before-upload="beforeAvatarUpload">
-                            <el-image style="width: 120px; height: 120px" class="avatar" v-if="ruleForm.coverImg" :src="ruleForm.coverImg"></el-image>
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload> -->
+                                <el-image style="width: 120px; height: 120px" class="avatar" v-if="ruleForm.coverImg" :src="ruleForm.coverImg"></el-image>
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload> -->
                 </el-form-item>
                 <el-form-item label="选择标签" prop='tags'>
                     <el-checkbox-group v-model="ruleForm.tags">
-                        <el-checkbox name='tags' label="0" border size="medium">经典</el-checkbox>
-                        <el-checkbox name='tags' label="1" border size="medium">荤笑话</el-checkbox>
-                        <el-checkbox name='tags' label="2" border size="medium">精分</el-checkbox>
+                        <el-checkbox name='tags' label="1" border size="medium">要闻</el-checkbox>
+                        <el-checkbox name='tags' label="2" border size="medium">财经</el-checkbox>
+                        <el-checkbox name='tags' label="3" border size="medium">环球</el-checkbox>
                         <div style="margin-top: 10px">
-                            <el-checkbox name='tags' label="3" border size="medium">脑残</el-checkbox>
-                            <el-checkbox name='tags' label="4" border size="medium">冷笑话</el-checkbox>
+                            <el-checkbox name='tags' label="4" border size="medium">娱乐</el-checkbox>
+                            <el-checkbox name='tags' label="5" border size="medium">体育</el-checkbox>
                         </div>
                     </el-checkbox-group>
                 </el-form-item>
@@ -51,7 +45,7 @@
 <script>
 import headTop from '@/components/HeadTop.vue'
 import E from 'wangeditor'
-import { baseUrl, baseImgPath } from '@/config/env'
+import { baseUrl } from '@/config/env'
 import { mapState } from 'vuex'
 import { getStore } from '@/utils/utils.js'
 import { USER_INFO_KEY } from '@/config/env'
@@ -79,25 +73,26 @@ export default {
             editorText: '',
             options: [{
                 value: '1',
-                label: '娱乐'
+                label: "要闻"
             }, {
                 value: '2',
-                label: '生活'
+                label: "财经"
             }, {
                 value: '3',
-                label: '军事'
+                label: "环球"
             }, {
                 value: '4',
-                label: '汽车'
+                label: "娱乐"
+
             }, {
                 value: '5',
-                label: '房地产'
+                label: "体育"
             }],
             value: '',
             ruleForm: {
                 title: '',
-                type: '0',
-                tags: ['0'],
+                type: '',
+                tags: [],
                 coverImg: ''
             },
             rules: {
@@ -113,7 +108,7 @@ export default {
     },
     methods: {
         initUserInfo() {
-            let data = JSON.parse(getStore(USER_INFO_KEY));
+            let data = getStore(USER_INFO_KEY);
             if (!data) {
                 this.$router.push('login');
                 return;
@@ -132,8 +127,8 @@ export default {
             // this.$refs['formName'].resetFields();
             this.ruleForm = {
                 title: '',
-                type: '0',
-                tags: ['0'],
+                type: '',
+                tags: [],
                 coverImg: '',
             };
             this.editor.txt.clear();
@@ -154,9 +149,10 @@ export default {
                 jokeUserId: this.info,
                 content: this.getEtText(),
                 contentHtml: this.getEtContent(),
-                category: this.ruleForm.type,
+                category: this.ruleForm.tags[0],
                 tags: JSON.stringify(this.ruleForm.tags),
                 coverImg: this.ruleForm.coverImg,
+                status: 3,
             })
                 .then((response) => {
                     const result = response.data;
@@ -190,7 +186,7 @@ export default {
         this.editor = new E(this.$refs.editor)
         this.editor.customConfig.onchange = (html) => {
             this.editorContent = html
-            this.editorText = editor.txt.text();
+            this.editorText = this.editor.txt.text();
         }
         this.editor.create()
     }
