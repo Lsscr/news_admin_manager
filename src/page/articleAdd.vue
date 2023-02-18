@@ -2,12 +2,12 @@
     <div class="fillcontain edit-root">
         <headTop></headTop>
         <el-col :span="15" :offset="4">
-            <header class="form-header">新增段子</header>
+            <header class="form-header">新增文章</header>
             <el-form label-width="110px" class="demo-formData" :model="ruleForm" :rules="rules" ref="ruleForm">
-                <el-form-item label="段子标题" prop="title">
+                <el-form-item label="文章标题" prop="title">
                     <el-input v-model="ruleForm.title" placeholder="请输入标题" style='width: 500px' clearable></el-input>
                 </el-form-item>
-                <el-form-item label="段子种类">
+                <el-form-item label="文章种类">
                     <el-select v-model="ruleForm.type" placeholder="ruleForm.type">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
@@ -17,13 +17,14 @@
                     <el-input placeholder="请在这里粘贴图片地址" v-model="ruleForm.coverImg" style='width: 500px;margin-bottom: 10px'>
                     </el-input>
                     <div>
-                        <el-image style="width: 120px; height: 120px" class="avatar" v-if="ruleForm.coverImg" :src="ruleForm.coverImg">
+                        <el-image style="width: 120px; height: 120px" class="avatar" v-if="ruleForm.coverImg"
+                            :src="ruleForm.coverImg">
                         </el-image>
                     </div>
                     <!--   <el-upload class="avatar-uploader" :action="baseUrl + '/v1/addimg/shop'" :show-file-list="false" :on-success="handleShopAvatarScucess" :before-upload="beforeAvatarUpload">
-                        <el-image style="width: 120px; height: 120px" class="avatar" v-if="ruleForm.coverImg" :src="ruleForm.coverImg"></el-image>
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload> -->
+                            <el-image style="width: 120px; height: 120px" class="avatar" v-if="ruleForm.coverImg" :src="ruleForm.coverImg"></el-image>
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload> -->
                 </el-form-item>
                 <el-form-item label="选择标签" prop='tags'>
                     <el-checkbox-group v-model="ruleForm.tags">
@@ -70,21 +71,27 @@ export default {
     },
     data() {
         return {
-            editor:null,
+            editor: null,
             info: {},
             baseUrl,
             input: '',
             editorContent: '',
             editorText: '',
             options: [{
-                value: '0',
-                label: '网络'
-            }, {
                 value: '1',
-                label: '自创'
+                label: '娱乐'
             }, {
                 value: '2',
-                label: '听说'
+                label: '生活'
+            }, {
+                value: '3',
+                label: '军事'
+            }, {
+                value: '4',
+                label: '汽车'
+            }, {
+                value: '5',
+                label: '房地产'
             }],
             value: '',
             ruleForm: {
@@ -95,7 +102,7 @@ export default {
             },
             rules: {
                 title: [
-                    { required: true, message: '请输入段子标题', trigger: 'blur' },
+                    { required: true, message: '请输入文章标题', trigger: 'blur' },
                     { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
                 ],
                 tags: [
@@ -119,8 +126,8 @@ export default {
         getEtText() {
             return this.editorText;
         },
-        beforeAvatarUpload() {},
-        handleShopAvatarScucess() {},
+        beforeAvatarUpload() { },
+        handleShopAvatarScucess() { },
         resetForm(formName) {
             // this.$refs['formName'].resetFields();
             this.ruleForm = {
@@ -142,18 +149,18 @@ export default {
             });
         },
         addJokes() {
-            this.$axios.post(`/joke/add`, {
-                    title: this.ruleForm.title,
-                    jokeUserId: this.info.adminId,
-                    content: this.getEtText(),
-                    contentHtml: this.getEtContent(),
-                    category: this.ruleForm.type,
-                    tags: JSON.stringify(this.ruleForm.tags),
-                    coverImg: this.ruleForm.coverImg,
-                })
+            this.$axios.post(`/article/release`, {
+                title: this.ruleForm.title,
+                jokeUserId: this.info,
+                content: this.getEtText(),
+                contentHtml: this.getEtContent(),
+                category: this.ruleForm.type,
+                tags: JSON.stringify(this.ruleForm.tags),
+                coverImg: this.ruleForm.coverImg,
+            })
                 .then((response) => {
                     const result = response.data;
-                    if (result && result.code === 200) {
+                    if (result && result.code === '200') {
                         this.openSuccess('恭喜，发表成功!');
                         this.resetForm();
                     } else {

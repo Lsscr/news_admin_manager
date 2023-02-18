@@ -13,6 +13,12 @@
               </el-table-column>
               <el-table-column property="commentDetails" label="内容">
               </el-table-column>
+              <el-table-column property="city" label="操作">
+                <template slot-scope="scope">
+                    <el-button size="mini" @click='dealDelete(scope.$index,scope.row)' type="danger">
+                        删除</el-button>
+                </template>
+            </el-table-column>
           </el-table>
       </div>
       <div class="Pagination" style="text-align: left;margin-top: 10px;">
@@ -52,14 +58,13 @@ export default {
           this.page = val;
       },
       getJokeComments() {
-          this.$axios.get(`/admin/commentList`, {
+          this.$axios.get(`/article/comment`, {
                   params: {
-                      page: this.page,
-                      row: this.row,
-                      jokeId: this.jokeId
+                      joke_id: this.jokeId
                   }
               })
               .then((response) => {
+                console.log(response.data)
                   const joker = response.data;
                   const data = joker.data;
                   this.count = joker.total;
@@ -76,6 +81,24 @@ export default {
 
                       this.commentData.push(tableData);
                   })
+              })
+              .catch((error) => {
+                  console.log(error);
+              });
+
+      },
+      dealDelete() {
+          this.$axios.delete(`/admin/delete/comment`, {
+                  params: {
+                      jokeId: this.jokeId
+                  }
+              })
+              .then((response) => {
+                this.$message({
+                    type: 'success',
+                    message: '删除成功'
+                })
+                this.getJokeComments()
               })
               .catch((error) => {
                   console.log(error);

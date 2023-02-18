@@ -61,11 +61,11 @@
               </el-table-column>
               <el-table-column property="title" label="标题">
               </el-table-column>
-              <el-table-column property="jokeUserNick" label="段子作者">
+              <el-table-column property="jokeUserNick" label="文章作者">
               </el-table-column>
               <el-table-column property="postTime" label="发布时间" sortable>
               </el-table-column>
-              <el-table-column property="jokeId" label="段子ID">
+              <el-table-column property="jokeId" label="文章ID">
               </el-table-column>
               <el-table-column property="city" label="操作">
                   <template slot-scope="scope">
@@ -100,7 +100,7 @@ import headTop from '@/components/HeadTop'
 import comment from '@/components/comment'
 import { mapState } from 'vuex'
 
-const JOKE_CATEGORY = { "0": "网络", "1": "自创", "2": "听说" };
+const JOKE_CATEGORY = { "1": "网络", "2": "自创", "3": "听说" };
 const JOKE_TAGS = { "0": "经典", "1": "荤笑话", "2": "精分", "3": "脑残", "4": "冷笑话" };
 export default {
   components: {
@@ -120,7 +120,7 @@ export default {
           JOKE_TAGS: JOKE_TAGS,
           tableData: [],
           page: 1,
-          row: 10,
+          row: 5,
           count: 0,
           currentPage: 1,
           dialogVisible: false,
@@ -182,8 +182,8 @@ export default {
       getJokes() {
           this.$axios.get(`admin/articleList`, {
                   params: {
-                      page: this.page,
-                      row: this.row
+                      pageNum: this.page,
+                      pageSize: this.row
                   }
               })
               .then((response) => {

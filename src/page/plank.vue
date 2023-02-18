@@ -13,31 +13,17 @@
         </el-table-column>
       </el-table>
       <div class="Pagination" style="text-align: left; margin-top: 10px">
-        <el-pagination
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-size="10"
-          layout="total, prev, pager, next"
-          :total="count"
-        >
+        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :current-page="currentPage" :page-size="10" layout="total, prev, pager, next" :total="count">
         </el-pagination>
       </div>
       <el-col :span="15" :offset="0">
         <header class="form-header" style="text-align: left; margin: 50px 30px 30px 30px">新增公告</header>
         <el-form label-width="110px" class="demo-formData" :model="ruleForm" :rules="rules" ref="ruleForm">
           <el-form-item label="内容" prop="title">
-            <el-input
-              v-model="ruleForm.title"
-              placeholder="请输入公告内容"
-              type="textarea"
-              :autosize="{ minRows: 2, maxRows: 5 }"
-              maxlength="150"
-              show-word-limit
-              style="width: 500px"
-              clearable
-            ></el-input>
+            <el-input v-model="ruleForm.title" placeholder="请输入公告内容" type="textarea"
+              :autosize="{ minRows: 2, maxRows: 5 }" maxlength="150" show-word-limit style="width: 500px"
+              clearable></el-input>
           </el-form-item>
           <el-form-item class="edit-btn">
             <el-button @click="submitForm('ruleForm')" type="primary">提交</el-button>
@@ -106,16 +92,10 @@ export default {
 
     getPlankList() {
       this.$axios
-        .get(`/plank/planktalk/list`, {
-          params: {
-            page: this.page,
-            row: this.row,
-          },
-        })
+        .get(`/plank/get`)
         .then((response) => {
-          const result = response.data;
-          const data = result.data;
-          this.count = result.total;
+          const data = response.data.data;
+          this.count = data.length;
           this.talkData = [];
           data.forEach((item) => {
             const talkItem = {};
@@ -133,18 +113,18 @@ export default {
     deletePlank(index, id) {
       this.dialogVisible = false;
       this.$axios
-        .post(
-          `/admin/planktalk/delete`,
-          this.$qs.stringify({
-            id: id,
-            adminId: this.adminId,
-          }),
+        .delete(
+          `/plank/delete`, {
+          params: {
+            id: this.talkData[index]['plankId'],
+          }
+        }
         )
         .then((response) => {
           const result = response.data;
-          if (result && result.code === 200) {
+          if (result && result.code === '200') {
             this.openSuccess("恭喜，删除成功!");
-            this.talkData.splice(index, 1);
+            this.getPlankList()
           } else if (result.msg) {
             this.$message.error(result.msg);
           }
@@ -168,23 +148,17 @@ export default {
     addPlank() {
       this.$axios
         .post(
-          `/admin/planktalk/add`,
-          this.$qs.stringify({
-            content: this.ruleForm.title,
-            adminId: this.adminId,
-          }),
-        )
+          `/plank/post`,undefined,{
+            params:{
+              content: this.ruleForm.title
+            }
+        })
         .then((response) => {
           const result = response.data;
           const data = result.data[0];
-          if (result && result.code === 200) {
+          if (result && result.code === '200') {
             this.openSuccess("恭喜，新增成功!");
-            let talkItem = {};
-            talkItem.plankId = data.plankId;
-            talkItem.content = data.content;
-            talkItem.sendTime = data.sendTime;
-            this.talkData.unshift(talkItem);
-            this.ruleForm.title = "";
+            this.getPlankList();
           }
         })
         .catch((error) => {

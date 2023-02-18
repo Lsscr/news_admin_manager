@@ -89,8 +89,8 @@ export default {
                     const user = response.data;
                     if (user.code === '200') {
                         this.$router.push('manager');
-                        setStore(USER_INFO_KEY, user.data[0]);
-                        this.$store.commit("initUserInfo", user.data[0].adminId);
+                        setStore(USER_INFO_KEY, user.data.userId);
+                        this.$store.commit("initUserInfo", user.data.userId);
 
                     } else {
                         this.openToast(user.msg);
